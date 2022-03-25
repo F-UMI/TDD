@@ -5,14 +5,41 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 class PasswordStrengthMeterTest {
+  private PasswordStrengthMeter meter = new PasswordStrengthMeter();
+
+  private void assertStrength(String password, PasswordStrength expStr) {
+    PasswordStrength result = meter.meter(password);
+    assertEquals(expStr,result);
+  }
 
   @Test
   void meetsAllCriteria_Then_Strong() {
-    PasswordStrengthMeter meter = new PasswordStrengthMeter();
-    PasswordStrength result = meter.meter("ab12!@AB");
-    assertEquals(PasswordStrength.STRONG, result);
-    PasswordStrength result2 = meter.meter("abc1!Add");
-    assertEquals(PasswordStrength.STRONG, result2);
+    assertStrength("ab12!@AB", PasswordStrength.STRONG);
+    assertStrength("abc1!Add", PasswordStrength.STRONG);
+  }
+
+  @Test
+  void meetsOtherCriteria_except_for_Length_Then_Normal() {
+    assertStrength("ab12!@A", PasswordStrength.NORMAL);
+    assertStrength("Ab12!c", PasswordStrength.NORMAL);
+  }
+
+  @Test
+  void meetsOtherCriteria_except_for_number_Then_Normal(){
+    assertStrength("ab!@ABqwer", PasswordStrength.NORMAL);
 
   }
+  @Test
+  void nullnput_Then_Invaild() {
+    assertStrength(null, PasswordStrength.INVAILD);
+  }
+  @Test
+  void emptyInput_Then_Invaild() {
+    assertStrength("", PasswordStrength.INVAILD);
+  }
+  @Test
+  void meetsOtherCriteria_except_for_Uppercase_Then_Normal() {
+    assertStrength("ab12!@df",PasswordStrength.NORMAL );
+  }
+
 }
