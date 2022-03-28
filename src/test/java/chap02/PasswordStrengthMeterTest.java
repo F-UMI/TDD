@@ -3,13 +3,15 @@ package src.test.java.chap02;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import src.main.java.chap02.PasswordStrength;
 
 class PasswordStrengthMeterTest {
+
   private PasswordStrengthMeter meter = new PasswordStrengthMeter();
 
   private void assertStrength(String password, PasswordStrength expStr) {
     PasswordStrength result = meter.meter(password);
-    assertEquals(expStr,result);
+    assertEquals(expStr, result);
   }
 
   @Test
@@ -25,21 +27,43 @@ class PasswordStrengthMeterTest {
   }
 
   @Test
-  void meetsOtherCriteria_except_for_number_Then_Normal(){
+  void meetsOtherCriteria_except_for_number_Then_Normal() {
     assertStrength("ab!@ABqwer", PasswordStrength.NORMAL);
 
   }
+
   @Test
   void nullnput_Then_Invaild() {
     assertStrength(null, PasswordStrength.INVAILD);
   }
+
   @Test
   void emptyInput_Then_Invaild() {
     assertStrength("", PasswordStrength.INVAILD);
   }
+
   @Test
   void meetsOtherCriteria_except_for_Uppercase_Then_Normal() {
-    assertStrength("ab12!@df",PasswordStrength.NORMAL );
+    assertStrength("ab12!@df", PasswordStrength.NORMAL);
   }
 
+  @Test
+  void meetsOnlyLengthCriteria_Then_Weak() {
+    assertStrength("abcdefghi", PasswordStrength.WEAK);
+  }
+
+  @Test
+  void meetsOnlyNumCriteria_Then_Weak() {
+    assertStrength("12345", PasswordStrength.WEAK);
+  }
+
+  @Test
+  void meetsOnlyUpperCriteria_Then_Weak() {
+    assertStrength("ABCDF", PasswordStrength.WEAK);
+  }
+
+  @Test
+  void meetsNoCriteria_Then_Weak() {
+    assertStrength("abc", PasswordStrength.WEAK);
+  }
 }
